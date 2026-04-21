@@ -15,16 +15,26 @@ const socketHandler = require('./src/socket/socket.handler');
 const app = express();
 const server = http.createServer(app);
 
-const io = new Server(server, {
+const io = require("socket.io")(server, {
   cors: {
-    origin: process.env.CLIENT_URL,
-    methods: ['GET', 'POST'],
-  },
+    origin: [
+      "https://chat-bot-app-898l.vercel.app",
+      "http://localhost:3000"
+    ],
+    methods: ["GET", "POST"],
+    credentials: true
+  }
 });
 
 // ── Middlewares ──
 app.use(helmet());
-app.use(cors({ origin: process.env.CLIENT_URL }));
+app.use(cors({
+  origin: [
+    "https://chat-bot-app-898l.vercel.app",
+    "http://localhost:3000"
+  ],
+  credentials: true
+}));
 app.use(morgan('dev'));
 app.use(express.json());
 app.use(rateLimit({ windowMs: 15 * 60 * 1000, max: 100 }));
